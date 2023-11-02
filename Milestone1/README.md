@@ -12,9 +12,9 @@ EDA.py:
 
 
 To create executables (exe) in windows
-## install python from microsoft store (V3.9 in use)
-# python --version
-# pip install --upgrade pip
+### install python from microsoft store (V3.9 in use)
+##### python --version
+##### pip install --upgrade pip
 # python --version
 # pip install -U scikit-learn
 # python -m pip show scikit-learn
