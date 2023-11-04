@@ -5,16 +5,14 @@ print("ML Job Starting...\n")
 # train_df.to_csv("MS_1_Scenario_trainCheck.csv", 
 #                 index=False, encoding='utf-8')
 
-
-
 # For insurance 
-# columns = ["Passenger Fare", "Ticket Number", 
-#            "Name", "Cabin", "NumSiblingSpouse", "NumParentChild", 
-#            "Age"]
+columns = ["Passenger Fare", "Ticket Number", 
+           "Name", "Cabin", "NumSiblingSpouse", "NumParentChild", 
+           "Age"]
 # insurance_train_df = train_df.copy()
-# insurance_test_df = test_df.copy()
+insurance_test_df = test_df.copy()
 # DropColumn(insurance_train_df, columns)
-# DropColumn(insurance_test_df, columns)
+DropColumn(insurance_test_df, columns)
 # # Placeholder incase the column creation in the SVM portion starts acting up
 # # For now not in use
 # if not {'Prediction'}.issubset(insurance_train_df.columns):   # Prevent column duplication
@@ -132,15 +130,15 @@ decTreePred = decTree.predict(test_df)
 # Insurance            
 # trainPred = decTree.predict(train_df)
 # insurance_train_decTreePred = np.round(decTree.predict_proba(train_df),3)
-# insurance_test_decTreePred = np.round(decTree.predict_proba(test_df),3)
+insurance_test_decTreePred = np.round(decTree.predict_proba(test_df),3)
 # insurance_train_df['Prediction'] = trainPred.tolist()
-# insurance_test_df['Prediction'] = decTreePred.tolist()
+insurance_test_df['Prediction'] = decTreePred.tolist()
 # insurance_train_df['Death Probability'] = insurance_train_decTreePred[:, 0].tolist()
 # insurance_train_df['Alive Probability'] = insurance_train_decTreePred[:, 1].tolist()
 # insurance_test_df['Death Probability'] = insurance_test_decTreePred[:, 0].tolist()
-# insurance_test_df['Alive Probability'] = insurance_test_decTreePred[:, 1].tolist()
+insurance_test_df['Alive Probability'] = insurance_test_decTreePred[:, 1].tolist()
 # insurance_train_df.to_csv('insurance_train_predictions.csv', index=False)
-# insurance_test_df.to_csv('insurance_test_predictions.csv', index=False)
+insurance_test_df.to_csv('insurance_test_predictions.csv', index=False)
 
 
 

@@ -4,15 +4,9 @@ from HeaderFile import *
 
 print("EDA Job Starting...\n")
 
-## Reading CSV files
-# Read the dataset. The imported CSV is called a DataFrame --> df.
-try:
-    test_df = pd.read_csv('MS_1_Scenario_test_combined.csv', encoding='utf-8')
-    print("Including new entries in the test set")
-except:
-  test_df = pd.read_csv('MS_1_Scenario_test.csv', encoding='utf-8') 
 
-train_df = pd.read_csv('MS_1_Scenario_train.csv', encoding='utf-8')
+
+train_df, test_df = path_to_csv()
 
 # Combine 
 # frames = [train_df, test_df]

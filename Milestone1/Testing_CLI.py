@@ -5,12 +5,7 @@ from HeaderFile import *
 # and undefined / undesirable events (e.g., suddenly import EDA does not work)
 import subprocess 
 
-## Reading CSV files
-# Read the dataset. The imported CSV is called a DataFrame --> df.
-CLI_test_df = pd.read_csv('MS_1_Scenario_test.csv', encoding='utf-8')
-## Passenger Fare filtering (Removes '$', round to 2 d.p., cast type as float)
-RemoveDollarSign(CLI_test_df)
-# print(train_df.head())
+CLI_test_df = pd.DataFrame() 
 
 if os.path.exists("MS_1_Scenario_test_combined.csv"):
     # Delete the file
@@ -18,6 +13,7 @@ if os.path.exists("MS_1_Scenario_test_combined.csv"):
     print("Removed 'MS_1_Scenario_test_combined.csv' file")
 
 def main():
+  global CLI_test_df 
   # data = {
   #     'Passenger ID' : [1],
   #     'Passenger Fare' : [100.1],
@@ -34,22 +30,35 @@ def main():
   # }
   data = ['Passenger ID', 'Passenger Fare', 'Ticket Class','Ticket Number',
           'Cabin', 'Embarkation Country', 'Name', 'Age',
-          'Gender', 'NumSiblingSpouse','NumParentChild', 'Survived'
-          ]
+          'Gender', 'NumSiblingSpouse','NumParentChild', 'Survived']
+  
   df = pd.DataFrame(columns=data)
+  while CLI_test_df.empty:
+    subprocess.run(["python", "File_Upload_Widget.py"]) 
+    ## Reading CSV files
+    train_df, CLI_test_df = path_to_csv()
+    if not CLI_test_df.empty:
+      # Read the dataset. The imported CSV is called a DataFrame --> df.
+      ## Passenger Fare filtering (Removes '$', round to 2 d.p., cast type as float)
+      RemoveDollarSign(CLI_test_df)
+      # print(train_df.head())
+    else:
+      print("Unable to retreive csv files...")
+
   # df.info()
   # print(df)
   # locates the last value in Passenger ID
   passenger_id = CLI_test_df['Passenger ID'].iloc[-1] + 1
-  
+
   while True:
-    print("Main Menu:")
+    print("\nMain Menu:")
     print("1. Input new entry")
     print("2. Display NEW test entries")
     print("3. Display ALL test entries")
     print("4. Perform EDA")
     print("5. Perform ML")
     print("6. Display visuals for EDA / ML")
+    print("7. Insurance Menu")
     print("8. Exit program")
     option = input("Select an option (1/8): ")
   
@@ -103,27 +112,15 @@ def main():
 
       subprocess.run(["python", "ML.py"])  # executes ML.py script
 
-    # Run EDA Visuals
+    # Run EDA & ML Visuals
     elif option == '6':
       print("")
-      while True:
-        from Visuals import EDA_Visuals, ML_Visuals
-        print("Visuals Menu:")
-        print("1. Display visuals for EDA")
-        print("2. Display visuals for ML")
-        print("3. Exit Menu")
-        option = input("Select an option (1/3): ")
+      subprocess.run(["python", "Visuals.py"])  # executes Visuals.py script
 
-        if option == '1':
-          EDA_Visuals()
-        elif option == '2':
-          ML_Visuals()
-        elif option == '3':
-          print("")
-          break
-        else:
-          print("Invalid option selected...\n")
-
+    # Run insurance subprocess
+    elif option == '7':
+      print("")
+      subprocess.run(["python", "Insurance.py"])  # executes Insurance.py script
 
     elif option == '8':
       break

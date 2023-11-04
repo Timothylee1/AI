@@ -33,6 +33,45 @@ from scipy.stats import randint
 
 
 ###### EDA Functions
+
+def path_to_csv(): 
+  # Initialize train_df and test_df
+  tr_df = None
+  te_df = None
+  ## Reading CSV files
+  # Read the selected file paths from the saved file
+  selected_file_paths = []
+  with open("selected_file_paths.txt", "r") as file:
+    for line in file:
+      parts = line.strip().split("=")
+      # print(parts, "lol")
+      if len(parts) == 2:
+        filename = parts[0]
+        file_path = parts[1]
+        # print(filename, file_path)
+        selected_file_paths.append((filename, file_path))
+        # print(selected_file_paths)
+
+  # Load the CSV files based on the selected file paths
+  for filename, file_path in selected_file_paths:
+    if filename == 'train':
+      tr_df = pd.read_csv(file_path, encoding='utf-8')
+      print("Train file loaded")
+    elif filename == 'test':
+      te_df = pd.read_csv(file_path, encoding='utf-8')
+      print("Test file loaded")
+    else:
+      print("Files not loaded, error...")
+
+    # Read the dataset. The imported CSV is called a DataFrame --> df.
+  try:
+    te_df = pd.read_csv('MS_1_Scenario_test_combined.csv', encoding='utf-8')
+    print("Including new entries in the test set")
+  except:
+    None
+  
+  return tr_df, te_df
+
 # Removes '$' and rounds the value to 2 d.p. for Passenger Fare column
 # df_set refers to the dataframe (train_df, test_df)
 def RemoveDollarSign(df_set: pd.DataFrame):
@@ -208,6 +247,7 @@ def corr(data):
   plt.figure(figsize=(10, 10))
   correlation = data.corr(numeric_only=True)
   sns.heatmap(correlation, annot=True, cbar=True, cmap="RdYlGn")
+  plt.xticks(rotation=20, ha="right") 
   #plt.show()
 
 
@@ -296,11 +336,11 @@ def ProbabilityCheck(df_set: pd.DataFrame, column):
 def NonTruncDisplay(df_set: pd.DataFrame, dataset_name: object):
   # Prevent truncation of output for exe
   with pd.option_context('display.max_colwidth', None,
-                        'display.max_rows', 15):
+                        'display.max_rows', None):
       print("\n {} Set:\n".format(dataset_name))
       print(df_set)
-      pd.reset_option('display.max_colwidth')
-      pd.reset_option('display.max_rows')
+      # pd.reset_option('display.max_colwidth')
+      # pd.reset_option('display.max_rows')
 
 
 
