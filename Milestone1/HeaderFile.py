@@ -301,10 +301,11 @@ def PerformanceMetric(testPredictions, ModelName: object, testActual_df: pd.Data
 
   # Displays the confusion matrix of the trained ML model
   ax2 = plt.subplot(grid[1])
-  cm = confusion_matrix(testActual_df, testPredictions)    
+  cm = confusion_matrix(testActual_df, testPredictions)  
+  sns.set(font_scale=2.0)  
   sns.heatmap(cm, annot=True, cmap="crest",
             xticklabels=['Negative','Positive'],
-            yticklabels=['False','True'])
+            yticklabels=['False','True'], )
   ax2.set_ylabel('Actual',fontsize=12)
   ax2.set_xlabel('Prediction',fontsize=12)
   ax2.set_title('{} Confusion Matrix'.format(ModelName), fontsize=12)

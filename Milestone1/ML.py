@@ -122,10 +122,21 @@ svmPred = svm.predict(test_df)
 # branches represents a decision rule, and each leaf node represents the outcome.
 # Max depth of the tree, more caused overfitting, less causes underfitting
 decTree = DecisionTreeClassifier(max_depth=5)            
-decTree.fit(train_df, train_survive_df.values.ravel())  
+trees = decTree.fit(train_df, train_survive_df.values.ravel())
 decTreePred = decTree.predict(test_df)      
 
-
+# from sklearn.tree import export_graphviz
+# from six import StringIO  
+# from IPython.display import Image  
+# import pydotplus
+# feature_cols = ['Ticket Class',	'Embarkation Country', 'Title',	'AgeGroup',	'Gender',	'NumRelativeBrought']
+# dot_data = StringIO()
+# export_graphviz(trees, out_file=dot_data,  
+#                 filled=True, rounded=True,
+#                 special_characters=True,feature_names = feature_cols,class_names=['Dead','Alive'])
+# graph = pydotplus.graph_from_dot_data(dot_data.getvalue())  
+# graph.write_png('Decision_Tree.png')
+# Image(graph.create_png())
 
 # Insurance            
 # trainPred = decTree.predict(train_df)
