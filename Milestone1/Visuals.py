@@ -55,9 +55,10 @@ def EDA_title_age():
   result = " ".join([age_count, title, age_value])
   ax.text(0.1, yplacing-0.1, result, fontsize=10, ha="left")
   totalIndex += ageMean[len(titles)][1]
-  ax.text(0.1, yplacing-0.2, "Entries with '0' age: 167", 
+  invalidAge = train_df_B4drop.index[-1] - totalIndex
+  ax.text(0.1, yplacing-0.2, "Entries with '0' age: {}".format(invalidAge), 
           fontsize=10, ha="left")
-  ax.text(0.1, yplacing-0.3, "Total entries: {}".format(totalIndex+167), 
+  ax.text(0.1, yplacing-0.3, "Total entries: {}".format(totalIndex+invalidAge), 
           fontsize=10, ha="left")
   # Remove axis ticks and labels
   ax.axis("off")

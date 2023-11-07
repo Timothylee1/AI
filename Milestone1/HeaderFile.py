@@ -68,7 +68,7 @@ def path_to_csv():
     te_df = pd.read_csv('MS_1_Scenario_test_combined.csv', encoding='utf-8')
     print("Including new entries in the test set")
   except:
-    None
+    pass
   
   return tr_df, te_df
 
@@ -285,7 +285,7 @@ def PerformanceMetric(testPredictions, ModelName: object, testActual_df: pd.Data
   })
 
   # Adjusting the parameters of the subplots figure
-  fig = plt.figure(figsize=(14, 10))
+  fig = plt.figure(figsize=(15, 8))
   grid = gridspec.GridSpec(2, 1, left=0.1, bottom=0.1,
                            right=0.9, top=0.9, 
                            wspace=0.1, hspace=0.5)
@@ -306,6 +306,7 @@ def PerformanceMetric(testPredictions, ModelName: object, testActual_df: pd.Data
   sns.heatmap(cm, annot=True, cmap="crest",
             xticklabels=['Negative','Positive'],
             yticklabels=['False','True'], )
+  sns.set(font_scale=1.0)
   ax2.set_ylabel('Actual',fontsize=12)
   ax2.set_xlabel('Prediction',fontsize=12)
   ax2.set_title('{} Confusion Matrix'.format(ModelName), fontsize=12)
