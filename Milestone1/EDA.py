@@ -6,42 +6,9 @@ print("EDA Job Starting...\n")
 
 train_df, test_df = path_to_csv()
 
-# Changes the Special data set with the same conventions as training set
-def prepareSpecialSet(df: pd.DataFrame):
-  # Define the column name mappings
-  column_name_mapping = {
-      'passenger_id': 'Passenger ID',
-      'pclass': 'Ticket Class',
-      'name': 'Name',
-      'sex': 'Gender',
-      'age': 'Age',
-      'sibsp': 'NumSiblingSpouse',
-      'parch': 'NumParentChild',
-      'ticket': 'Ticket Number',
-      'fare': 'Passenger Fare',
-      'cabin': 'Cabin',
-      'embarked': 'Embarkation Country'
-  }
-
-  # Rename the columns based on the mapping
-  df = df.rename(columns=column_name_mapping, errors='ignore')
-
-  # List of columns to drop if they are present
-  columns_to_drop = ['boat', 'body', 'home.dest']
-
-  # Drop the specified columns if they are present in the dataset
-  df = df.drop(columns=columns_to_drop, errors='ignore')
-
-  # Replace Null entries with 0
-  df = df.fillna(0)
-  # # Print the modified DataFrame
-  # print(df)
-  # print(df.info())
-  return df
-
 train_df = prepareSpecialSet(train_df)
 test_df = prepareSpecialSet(test_df)
-
+# print(test_df.info())
 # Combine 
 # frames = [train_df, test_df]
 # train_df = pd.concat(frames)

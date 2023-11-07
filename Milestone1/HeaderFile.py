@@ -72,6 +72,51 @@ def path_to_csv():
   
   return tr_df, te_df
 
+
+# Changes the Special data set with the same conventions as training set
+def prepareSpecialSet(df: pd.DataFrame):
+  # Define the column name mappings
+  column_name_mapping = {
+      'passenger_id': 'Passenger ID',
+      'pclass': 'Ticket Class',
+      'name': 'Name',
+      'sex': 'Gender',
+      'age': 'Age',
+      'sibsp': 'NumSiblingSpouse',
+      'parch': 'NumParentChild',
+      'ticket': 'Ticket Number',
+      'fare': 'Passenger Fare',
+      'cabin': 'Cabin',
+      'embarked': 'Embarkation Country'
+  }
+
+  # Rename the columns based on the mapping
+  df = df.rename(columns=column_name_mapping, errors='ignore')
+
+  # List of columns to drop if they are present
+  columns_to_drop = ['boat', 'body', 'home.dest']
+
+  # Drop the specified columns if they are present in the dataset
+  df = df.drop(columns=columns_to_drop, axis=1, errors='ignore')
+
+  # Define the desired order of columns
+  desired_order = ['Passenger ID', 'Passenger Fare', 'Ticket Class',
+                   'Ticket Number', 'Cabin', 'Embarkation Country',
+                   'Name', 'Age', 'Gender', 'NumSiblingSpouse',
+                   'NumParentChild', 'Survived'
+                  ]
+
+  # Rearrange the columns based on the desired order
+  df = df[desired_order]
+
+  # Replace Null entries with 0
+  df = df.fillna(0)
+  # # Print the modified DataFrame
+  # print(df)
+  # print(df.info())
+  return df
+
+
 # Removes '$' and rounds the value to 2 d.p. for Passenger Fare column
 # df_set refers to the dataframe (train_df, test_df)
 def RemoveDollarSign(df_set: pd.DataFrame):
@@ -88,10 +133,12 @@ def RemoveDollarSign(df_set: pd.DataFrame):
 # Takes in the dataframe and replaces each alphanumeric entry
 # with the first alphabet
 def CabinFilter(df_set: pd.DataFrame):
+  df_set['Cabin'] = df_set['Cabin'].astype(object)
   for index, row in df_set.iterrows():
       cabinStr = row['Cabin']
-      if cabinStr[0] != "0": # Does not concat for Cabin 0
-        df_set.at[index, 'Cabin'] = cabinStr[0]
+      if isinstance(cabinStr, str) and len(cabinStr) > 0:
+        if cabinStr[0] != "0":  # Does not concat for Cabin 0
+          df_set.at[index, 'Cabin'] = cabinStr[0]
 
 # Function to convert categorical non-numerical binary options 
 # (male, female; Yes, No) to categorical numerical binary options
@@ -118,27 +165,25 @@ def ToTypeInt(df_set: pd.DataFrame, column: object):
 # df_set refers to the dataframe (train_df, test_df)
 def RemoveOutlier(df_set: pd.DataFrame):
   for index, row in df_set.iterrows():
-    #if (row['Embarkation Country'].find('0') != -1):
-    #  df_set = df_set.drop(index) # remove row
-    if (ord(row['Embarkation Country'].upper()) > 64 
-        and ord(row['Embarkation Country'].upper()) < 91):
-        # Within A to Z Countries, assumes a to z as valid as well
-      if (row['Embarkation Country'] == "C" or 
-          row['Embarkation Country'] == "c"):
-        df_set.at[index, 'Embarkation Country'] = 1
-      elif (row['Embarkation Country'] == "Q" or 
-            row['Embarkation Country'] == "q"):
-        df_set.at[index, 'Embarkation Country'] = 2
-      elif (row['Embarkation Country'] == "S" or 
-            row['Embarkation Country'] == "s"):
-        df_set.at[index, 'Embarkation Country'] = 3
+    embark_country = row['Embarkation Country']
+    if isinstance(embark_country, str):
+      # Check if the value contains an alphabet character (A-Z or a-z)
+      if any(c.isalpha() for c in embark_country):
+        if embark_country.upper() == "C":
+          df_set.at[index, 'Embarkation Country'] = 1
+        elif embark_country.upper() == "Q":
+          df_set.at[index, 'Embarkation Country'] = 2
+        elif embark_country.upper() == "S":
+          df_set.at[index, 'Embarkation Country'] = 3
+        else:
+          df_set.at[index, 'Embarkation Country'] = 4  # outside of known countries
       else:
-        df_set.at[index, 'Embarkation Country'] = 4     # outside of known countries
-    # Not an alphabet
+        df_set = df_set.drop(index)  # remove row if it doesn't contain an alphabet character
     else:
-      df_set = df_set.drop(index) # remove row
+      df_set = df_set.drop(index)  # remove row if it's not a string
+
   ToTypeInt(df_set, 'Embarkation Country')
-  return df_set               # for some reason it wasn't updating the orginal dataset
+  return df_set
 
 
 # Amends entries for the Title column and finds the age for each title from train_df.

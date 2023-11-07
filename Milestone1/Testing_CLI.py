@@ -40,6 +40,7 @@ def main():
     if not CLI_test_df.empty:
       # Read the dataset. The imported CSV is called a DataFrame --> df.
       ## Passenger Fare filtering (Removes '$', round to 2 d.p., cast type as float)
+      CLI_test_df = prepareSpecialSet(CLI_test_df)
       RemoveDollarSign(CLI_test_df)
       # print(train_df.head())
     else:
